@@ -4,7 +4,7 @@ using Holoville.HOTween.Core;
 
 namespace kontrabida.hothelper
 {
-	public class HOTWeenHelper
+	public class HOTweenHelper
 	{
 		/// <summary>
 		/// Target object of this tween
@@ -51,7 +51,7 @@ namespace kontrabida.hothelper
 			}
 		}
 
-		public HOTWeenHelper(object target)
+		public HOTweenHelper(object target)
 		{
 			Target = target;
 		}
@@ -61,7 +61,7 @@ namespace kontrabida.hothelper
 		/// </summary>
 		/// <param name="duration"></param>
 		/// <returns></returns>
-		public HOTWeenHelper Duration(float duration)
+		public HOTweenHelper Duration(float duration)
 		{
 			Time = duration;
 			return this;
@@ -72,7 +72,7 @@ namespace kontrabida.hothelper
 		/// </summary>
 		/// <param name="speed"></param>
 		/// <returns></returns>
-		public HOTWeenHelper Speed(float speed)
+		public HOTweenHelper Speed(float speed)
 		{
 			Time = speed;
 			ParamUtil.SpeedBased(true);
@@ -84,9 +84,22 @@ namespace kontrabida.hothelper
 		/// </summary>
 		/// <param name="easing"></param>
 		/// <returns></returns>
-		public HOTWeenHelper Ease(EaseType easing)
+		public HOTweenHelper Ease(EaseType easing)
 		{
 			ParamUtil.Ease(easing);
+			return this;
+		}
+
+		/// <summary>
+		/// Add a single property to the Tween
+		/// </summary>
+		/// <param name="propertyName"></param>
+		/// <param name="value"></param>
+		/// <param name="isRelative"></param>
+		/// <returns></returns>
+		public HOTweenHelper Prop(string propertyName, object value, bool isRelative = false)
+		{
+			ParamUtil.Prop(propertyName, value, isRelative);
 			return this;
 		}
 
@@ -95,7 +108,7 @@ namespace kontrabida.hothelper
 		/// </summary>
 		/// <param name="properties">Must be in the format: "propName1", valueOfProp1, "propName2", valueOfProp2...</param>
 		/// <returns></returns>
-		public HOTWeenHelper Props(params object[] properties)
+		public HOTweenHelper Props(params object[] properties)
 		{
 			if ((properties.Length%2) != 0)
 				throw new Exception("Property Key/Value pair count does not match");
@@ -113,7 +126,7 @@ namespace kontrabida.hothelper
 		/// </summary>
 		/// <param name="callback"></param>
 		/// <returns></returns>
-		public HOTWeenHelper OnComplete(TweenDelegate.TweenCallback callback)
+		public HOTweenHelper OnComplete(TweenDelegate.TweenCallback callback)
 		{
 			ParamUtil.OnComplete(callback);
 			return this;
@@ -124,7 +137,7 @@ namespace kontrabida.hothelper
 		/// </summary>
 		/// <param name="callback"></param>
 		/// <returns></returns>
-		public HOTWeenHelper OnComplete(TweenDelegate.TweenCallbackWParms callback)
+		public HOTweenHelper OnComplete(TweenDelegate.TweenCallbackWParms callback)
 		{
 			ParamUtil.OnComplete(callback);
 			return this;
@@ -153,9 +166,9 @@ namespace kontrabida.hothelper
 		/// <typeparam name="T"></typeparam>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public static HOTWeenHelper Tween<T>(this T target)
+		public static HOTweenHelper Tween<T>(this T target)
 		{
-			return new HOTWeenHelper(target);
+			return new HOTweenHelper(target);
 		}
 	}
 
