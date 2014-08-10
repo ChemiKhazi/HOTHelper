@@ -6,14 +6,30 @@ namespace kontrabida.hothelper
 {
 	public class HOTSequence
 	{
-		protected class TimeTweeen
+		protected class SequenceOp
 		{
+			public enum OpType
+			{
+				Append,
+				Insert,
+				Prepend
+			}
+
+			public OpType type;
 			public float time;
 			public IHOTweenComponent tween;
 
-			public TimeTweeen(float time, IHOTweenComponent tween)
+			public SequenceOp(float time, IHOTweenComponent tween)
 			{
+				this.type = OpType.Insert;
 				this.time = time;
+				this.tween = tween;
+			}
+
+			public SequenceOp(OpType type, IHOTweenComponent tween)
+			{
+				this.time = -1f;
+				this.type = type;
 				this.tween = tween;
 			}
 		}
@@ -21,7 +37,10 @@ namespace kontrabida.hothelper
 		public Sequence Sequence { get; protected set; }
 		public SequenceParms Params { get; protected set; }
 
-		public bool IsReady { get { return Sequence != null; }}
+		public bool IsReady
+		{
+			get { return Sequence != null; }
+		}
 
 		protected SequenceParms ParamUtil
 		{
@@ -33,8 +52,8 @@ namespace kontrabida.hothelper
 			}
 		}
 
-		protected List<TimeTweeen> insertTweens = new List<TimeTweeen>();
-		protected List<IHOTweenComponent> appendTweens = new List<IHOTweenComponent>(); 
+		protected List<SequenceOp> sequenceOps = new List<SequenceOp>();
+		protected List<IHOTweenComponent> appendTweens = new List<IHOTweenComponent>();
 
 		public HOTSequence OnComplete(TweenDelegate.TweenCallback callback)
 		{
@@ -48,15 +67,39 @@ namespace kontrabida.hothelper
 			return this;
 		}
 
-		public HOTSequence Insert(float time, HOTWeenHelper tween)
+		public HOTSequence Insert(float time, HOTweenHelper tween)
 		{
-			insertTweens.Add(new TimeTweeen(time, tween.Start()));
+			sequenceOps.Add(new SequenceOp(time, tween.Start()));
 			return this;
 		}
 
-		public HOTSequence Append(HOTWeenHelper tween)
+		public HOTSequence Insert(float time, IHOTweenComponent tween)
 		{
-			appendTweens.Add(tween.Start());
+			sequenceOps.Add(new SequenceOp(time, tween));
+			return this;
+		}
+
+		public HOTSequence Append(HOTweenHelper tween)
+		{
+			sequenceOps.Add(new SequenceOp(SequenceOp.OpType.Append, tween.Start()));
+			return this;
+		}
+
+		public HOTSequence Append(IHOTweenComponent tween)
+		{
+			sequenceOps.Add(new SequenceOp(SequenceOp.OpType.Append, tween));
+			return this;
+		}
+		
+		public HOTSequence Prepend(HOTweenHelper tween)
+		{
+			sequenceOps.Add(new SequenceOp(SequenceOp.OpType.Prepend, tween.Start()));
+			return this;
+		}
+
+		public HOTSequence Prepend(IHOTweenComponent tween)
+		{
+			sequenceOps.Add(new SequenceOp(SequenceOp.OpType.Prepend, tween));
 			return this;
 		}
 
@@ -65,8 +108,21 @@ namespace kontrabida.hothelper
 			if (!IsReady)
 			{
 				Sequence = new Sequence(Params);
-				appendTweens.ForEach(tween => Sequence.Append(tween));
-				insertTweens.ForEach(tween => Sequence.Insert(tween.time, tween.tween));
+				foreach (var sequenceOp in sequenceOps)
+				{
+					switch (sequenceOp.type)
+					{
+						case SequenceOp.OpType.Append:
+							Sequence.Append(sequenceOp.tween);
+							break;
+						case SequenceOp.OpType.Insert:
+							Sequence.Insert(sequenceOp.time, sequenceOp.tween);
+							break;
+						case SequenceOp.OpType.Prepend:
+							Sequence.Prepend(sequenceOp.tween);
+							break;
+					}
+				}
 			}
 			return Sequence;
 		}
