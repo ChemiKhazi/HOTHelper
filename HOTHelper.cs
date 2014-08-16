@@ -121,6 +121,12 @@ namespace kontrabida.hothelper
 			return this;
 		}
 
+		public HOTweenHelper Delay(float delay)
+		{
+			ParamUtil.Delay(delay);
+			return this;
+		}
+
 		/// <summary>
 		/// Set a callback for this tween
 		/// </summary>
