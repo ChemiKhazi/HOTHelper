@@ -1,6 +1,7 @@
 ﻿using System;
 using Holoville.HOTween;
 using Holoville.HOTween.Core;
+using UnityEngine;
 
 namespace kontrabida.hothelper
 {
@@ -87,6 +88,12 @@ namespace kontrabida.hothelper
 		public HOTweenHelper Ease(EaseType easing)
 		{
 			ParamUtil.Ease(easing);
+			return this;
+		}
+
+		public HOTweenHelper Ease(AnimationCurve animCurve)
+		{
+			ParamUtil.Ease(animCurve);
 			return this;
 		}
 
