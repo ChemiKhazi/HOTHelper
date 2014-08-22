@@ -12,25 +12,49 @@ namespace kontrabida.hothelper
 			{
 				Append,
 				Insert,
-				Prepend
+				Prepend,
+				AppendCallback,
+				InsertCallback,
+				AppendInterval,
+				PrependInterval
 			}
 
 			public OpType type;
 			public float time;
-			public IHOTweenComponent tween;
+			public object opObject;
 
 			public SequenceOp(float time, IHOTweenComponent tween)
 			{
 				this.type = OpType.Insert;
 				this.time = time;
-				this.tween = tween;
+				this.opObject = tween;
 			}
 
 			public SequenceOp(OpType type, IHOTweenComponent tween)
 			{
 				this.time = -1f;
 				this.type = type;
-				this.tween = tween;
+				this.opObject = tween;
+			}
+
+			public SequenceOp(TweenDelegate.TweenCallback callback, float time)
+			{
+				this.type = OpType.InsertCallback;
+				this.time = time;
+				this.opObject = callback;
+			}
+
+			public SequenceOp(TweenDelegate.TweenCallback callback)
+			{
+				this.time = -1f;
+				this.type = OpType.AppendCallback;
+				this.opObject = callback;
+			}
+
+			public SequenceOp(OpType type, float interval)
+			{
+				this.type = type;
+				this.time = interval;
 			}
 		}
 
@@ -103,6 +127,30 @@ namespace kontrabida.hothelper
 			return this;
 		}
 
+		public HOTSequence InsertCallback(float time, TweenDelegate.TweenCallback callback)
+		{
+			sequenceOps.Add(new SequenceOp(callback, time));
+			return this;
+		}
+
+		public HOTSequence AppendCallback(TweenDelegate.TweenCallback callback)
+		{
+			sequenceOps.Add(new SequenceOp(callback));
+			return this;
+		}
+
+		public HOTSequence AppendInterval(float interval)
+		{
+			sequenceOps.Add(new SequenceOp(SequenceOp.OpType.AppendInterval, interval));
+			return this;
+		}
+
+		public HOTSequence PrependInterval(float interval)
+		{
+			sequenceOps.Add(new SequenceOp(SequenceOp.OpType.PrependInterval, interval));
+			return this;
+		}
+
 		public Sequence BuildSequence()
 		{
 			if (!IsReady)
@@ -113,13 +161,25 @@ namespace kontrabida.hothelper
 					switch (sequenceOp.type)
 					{
 						case SequenceOp.OpType.Append:
-							Sequence.Append(sequenceOp.tween);
+							Sequence.Append((IHOTweenComponent) sequenceOp.opObject);
 							break;
 						case SequenceOp.OpType.Insert:
-							Sequence.Insert(sequenceOp.time, sequenceOp.tween);
+							Sequence.Insert(sequenceOp.time, (IHOTweenComponent) sequenceOp.opObject);
 							break;
 						case SequenceOp.OpType.Prepend:
-							Sequence.Prepend(sequenceOp.tween);
+							Sequence.Prepend((IHOTweenComponent) sequenceOp.opObject);
+							break;
+						case SequenceOp.OpType.AppendCallback:
+							Sequence.AppendCallback((TweenDelegate.TweenCallback) sequenceOp.opObject);
+							break;
+						case SequenceOp.OpType.InsertCallback:
+							Sequence.InsertCallback(sequenceOp.time, (TweenDelegate.TweenCallback) sequenceOp.opObject);
+							break;
+						case SequenceOp.OpType.AppendInterval:
+							Sequence.AppendInterval(sequenceOp.time);
+							break;
+						case SequenceOp.OpType.PrependInterval:
+							Sequence.PrependInterval(sequenceOp.time);
 							break;
 					}
 				}
