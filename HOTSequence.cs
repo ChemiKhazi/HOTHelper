@@ -6,6 +6,14 @@ namespace kontrabida.hothelper
 {
 	public class HOTSequence
 	{
+		public static HOTSequence New
+		{
+			get
+			{
+				return new HOTSequence();
+			}
+		}
+
 		protected class SequenceOp
 		{
 			public enum OpType
