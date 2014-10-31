@@ -169,6 +169,16 @@ namespace kontrabida.hothelper
 			Tween = HOTween.To(Target, Time.Value, Params);
 			return Tween;
 		}
+
+		public Tweener StartFrom()
+		{
+			if (Params == null)
+				return null;
+			if (!Time.HasValue)
+				return null;
+			Tween = HOTween.From(Target, Time.Value, Params);
+			return Tween;
+		}
 	}
 
 	public static class HOTHelperExtension
