@@ -134,6 +134,12 @@ namespace kontrabida.hothelper
 			return this;
 		}
 
+		public HOTweenHelper UpdateType(UpdateType updateType)
+		{
+			ParamUtil.UpdateType(updateType);
+			return this;
+		}
+
 		/// <summary>
 		/// Set a callback for this tween
 		/// </summary>
