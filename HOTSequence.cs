@@ -87,6 +87,12 @@ namespace kontrabida.hothelper
 		protected List<SequenceOp> sequenceOps = new List<SequenceOp>();
 		protected List<IHOTweenComponent> appendTweens = new List<IHOTweenComponent>();
 
+		public HOTSequence AutoKill(bool kill = false)
+		{
+			ParamUtil.AutoKill(kill);
+			return this;
+		}
+
 		public HOTSequence OnComplete(TweenDelegate.TweenCallback callback)
 		{
 			ParamUtil.OnComplete(callback);
