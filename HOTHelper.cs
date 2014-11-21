@@ -141,6 +141,17 @@ namespace kontrabida.hothelper
 		}
 
 		/// <summary>
+		/// Set a start callback for this tween
+		/// </summary>
+		/// <param name="callback"></param>
+		/// <returns></returns>
+		public HOTweenHelper OnStart(TweenDelegate.TweenCallback callback)
+		{
+			ParamUtil.OnStart(callback);
+			return this;
+		}
+
+		/// <summary>
 		/// Set a callback for this tween
 		/// </summary>
 		/// <param name="callback"></param>
