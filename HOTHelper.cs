@@ -177,10 +177,11 @@ namespace kontrabida.hothelper
 		/// Set the number of loops for this tween. Default 1, -1 repeats until stopped.
 		/// </summary>
 		/// <param name="loopCount"></param>
+		/// <param name="loopType"></param>
 		/// <returns></returns>
-		public HOTweenHelper Loops(int loopCount = 1)
+		public HOTweenHelper Loops(int loopCount = 1, LoopType loopType = LoopType.Restart)
 		{
-			Params.Loops(loopCount);
+			Params.Loops(loopCount, loopType);
 			return this;
 		}
 
