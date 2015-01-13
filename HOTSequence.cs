@@ -93,6 +93,12 @@ namespace kontrabida.hothelper
 			return this;
 		}
 
+		public HOTSequence Loops(int loops, LoopType loop_type = LoopType.Restart)
+		{
+			ParamUtil.Loops(loops, loop_type);
+			return this;
+		}
+
 		public HOTSequence OnComplete(TweenDelegate.TweenCallback callback)
 		{
 			ParamUtil.OnComplete(callback);
